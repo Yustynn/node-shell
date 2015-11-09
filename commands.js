@@ -1,15 +1,25 @@
 var fs = require('fs');
 
 var commands = {
-  pwd: function() { parseResponse(__dirname); },
-  date: function() { parseResponse(Date()); },
+  pwd: function(inputs) { parseResponse(__dirname); },
+  date: function(inputs) { parseResponse(Date()); },
   ls: ls,
-  default: function(cmd) { parseResponse('You typed: ' + cmd); }
+  echo: echo,
+  default: function(inputs) { parseResponse('You typed: ' + inputs.join(' ')); }
 }
+
+
+
 function parseCmd(cmd) {
-  
-  return (commands[cmd] || commands['default'])(cmd);
+  var inputs = cmd.split(' ');
+
+  return (commands[inputs[0]] || commands['default'])(inputs);
 }
+
+function echo(inputs) {
+  parseResponse(inputs.slice(1).join(' '));
+}
+
 function ls() {
   fs.readdir('.', function(err, files){
     if(err) throw err;
